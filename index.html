@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Сайт с регистрацией и входом</title>
+  <title>Сайт с регистрацией и таймером аккаунта</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    input { display: block; margin: 5px 0; padding: 5px; width: 200px; }
-    button { margin: 10px 0; padding: 5px 10px; }
-    #welcome { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+    input { display: block; margin: 5px 0; padding: 5px; width: 220px; }
+    button { margin: 10px 0; padding: 5px 10px; cursor: pointer; }
+    #welcome { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; }
   </style>
 </head>
 <body>
-  <h1>Регистрация и вход</h1>
+  <h1>Регистрация и вход с таймером аккаунта</h1>
 
   <!-- Форма регистрации -->
   <div id="register">
-    <h2>Регистрация (аккаунт живет 2 часа)</h2>
+    <h2>Регистрация (аккаунт живет 30 секунд)</h2>
     <input type="email" id="regEmail" placeholder="Email" required>
     <input type="password" id="regPass" placeholder="Пароль" required>
     <button onclick="register()">Зарегистрироваться</button>
@@ -37,7 +37,7 @@
     <button onclick="logout()">Выйти</button>
   </div>
 
-  <!-- Firebase + script -->
+  <!-- Подключаем script.js -->
   <script type="module" src="script.js"></script>
 </body>
 </html>
