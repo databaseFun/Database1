@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔹 Конфиг Firebase (твой проект)
+// 🔹 Конфиг Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAlrl1dwlRDTSkylFz7sSSH74OGAl1sKZM",
   authDomain: "firstsitee-7f870.firebaseapp.com",
@@ -20,7 +20,7 @@ const db = getFirestore(app);
 
 let countdownInterval; // для таймера обратного отсчета
 
-// 🔹 Регистрация (30 секунд жизни аккаунта)
+// 🔹 Регистрация (1 минута жизни)
 window.register = async function() {
   const email = document.getElementById("regEmail").value;
   const pass = document.getElementById("regPass").value;
@@ -30,7 +30,7 @@ window.register = async function() {
     const user = userCredential.user;
 
     const now = new Date();
-    const expires = new Date(now.getTime() + 30 * 1000); // +30 секунд
+    const expires = new Date(now.getTime() + 60 * 1000); // +1 минута
 
     await setDoc(doc(db, "users", user.uid), {
       email: email,
@@ -38,7 +38,7 @@ window.register = async function() {
       expiresAt: expires.toISOString()
     });
 
-    alert("Регистрация успешна! Аккаунт будет жить 30 секунд.");
+    alert("Регистрация успешна! Аккаунт будет жить 1 минуту.");
   } catch (error) {
     alert(error.message);
   }
@@ -72,7 +72,7 @@ window.login = async function() {
 
     countdownInterval = setInterval(async () => {
       const now = new Date();
-      const diff = Math.floor((expires - now) / 1000); // разница в секундах
+      const diff = Math.ceil((expires - now) / 1000); // оставшиеся секунды
 
       if (diff <= 0) {
         clearInterval(countdownInterval);
