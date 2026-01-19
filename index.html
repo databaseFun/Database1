@@ -3,32 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой первый сайт с регистрацией</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Firebase JS SDK -->
-  <script type="module" src="script.js"></script>
+  <title>Сайт с регистрацией и входом</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { display: block; margin: 5px 0; padding: 5px; width: 200px; }
+    button { margin: 10px 0; padding: 5px 10px; }
+    #welcome { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+  </style>
 </head>
 <body>
   <h1>Регистрация и вход</h1>
 
+  <!-- Форма регистрации -->
   <div id="register">
-    <h2>Регистрация</h2>
-    <input type="email" id="regEmail" placeholder="Email">
-    <input type="password" id="regPass" placeholder="Пароль">
+    <h2>Регистрация (аккаунт живет 2 часа)</h2>
+    <input type="email" id="regEmail" placeholder="Email" required>
+    <input type="password" id="regPass" placeholder="Пароль" required>
     <button onclick="register()">Зарегистрироваться</button>
   </div>
 
+  <!-- Форма входа -->
   <div id="login">
     <h2>Вход</h2>
-    <input type="email" id="logEmail" placeholder="Email">
-    <input type="password" id="logPass" placeholder="Пароль">
+    <input type="email" id="logEmail" placeholder="Email" required>
+    <input type="password" id="logPass" placeholder="Пароль" required>
     <button onclick="login()">Войти</button>
   </div>
 
+  <!-- Личный кабинет -->
   <div id="welcome" style="display:none;">
     <h2>Привет, <span id="userEmail"></span></h2>
+    <p id="accountTime"></p>
     <button onclick="logout()">Выйти</button>
   </div>
 
+  <!-- Firebase + script -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
