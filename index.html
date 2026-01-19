@@ -3,12 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Сайт с регистрацией и таймером аккаунта</title>
+  <title>Сайт с таймером аккаунта</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input { display: block; margin: 5px 0; padding: 5px; width: 220px; }
-    button { margin: 10px 0; padding: 5px 10px; cursor: pointer; }
-    #welcome { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; }
+    body {
+      font-family: "Roboto", sans-serif;
+      background: #f5f5f5;
+      color: #202124;
+      padding: 20px;
+    }
+
+    h1 {
+      font-weight: 400;
+      color: #1a73e8; /* синий, как в Firebase */
+    }
+
+    input {
+      display: block;
+      margin: 5px 0;
+      padding: 8px;
+      width: 220px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    button {
+      margin: 10px 0;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      background-color: #1a73e8;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #1669c1;
+    }
+
+    #register, #login, #welcome {
+      background: white;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(60,64,67,0.1), 0 1px 2px rgba(60,64,67,0.2);
+      max-width: 300px;
+    }
+
+    #accountTime {
+      font-weight: bold;
+      color: #d93025; /* красный таймер */
+    }
   </style>
 </head>
 <body>
@@ -16,7 +63,7 @@
 
   <!-- Форма регистрации -->
   <div id="register">
-    <h2>Регистрация (аккаунт живет 30 секунд)</h2>
+    <h2>Регистрация (аккаунт живет 1 минуту)</h2>
     <input type="email" id="regEmail" placeholder="Email" required>
     <input type="password" id="regPass" placeholder="Пароль" required>
     <button onclick="register()">Зарегистрироваться</button>
