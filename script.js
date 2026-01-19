@@ -18,7 +18,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 🔹 Регистрация с 2 часами жизни аккаунта
+let countdownInterval; // для таймера обратного отсчета
+
+// 🔹 Регистрация (30 секунд жизни аккаунта)
 window.register = async function() {
   const email = document.getElementById("regEmail").value;
   const pass = document.getElementById("regPass").value;
@@ -28,7 +30,7 @@ window.register = async function() {
     const user = userCredential.user;
 
     const now = new Date();
-    const expires = new Date(now.getTime() + 2 * 60 * 60 * 1000); // +2 часа
+    const expires = new Date(now.getTime() + 30 * 1000); // +30 секунд
 
     await setDoc(doc(db, "users", user.uid), {
       email: email,
@@ -36,13 +38,13 @@ window.register = async function() {
       expiresAt: expires.toISOString()
     });
 
-    alert("Регистрация успешна! Аккаунт будет действовать 2 часа.");
+    alert("Регистрация успешна! Аккаунт будет жить 30 секунд.");
   } catch (error) {
     alert(error.message);
   }
 }
 
-// 🔹 Вход с проверкой срока действия
+// 🔹 Вход + таймер обратного отсчета
 window.login = async function() {
   const email = document.getElementById("logEmail").value;
   const pass = document.getElementById("logPass").value;
@@ -57,25 +59,34 @@ window.login = async function() {
     if (!docSnap.exists()) throw new Error("Данных пользователя нет");
 
     const data = docSnap.data();
-    const now = new Date();
     const expires = new Date(data.expiresAt);
-
-    if (now > expires) {
-      alert("Срок действия аккаунта истек!");
-      await deleteDoc(docRef);  // удаляем из Firestore
-      await deleteUser(user);    // удаляем из Firebase Auth
-      return;
-    }
-
     const registeredAt = new Date(data.registeredAt);
 
     document.getElementById("userEmail").textContent = user.email;
-    document.getElementById("accountTime").textContent = 
-      `Аккаунт активен с ${registeredAt.toLocaleString()} до ${expires.toLocaleString()}`;
-
     document.getElementById("welcome").style.display = "block";
     document.getElementById("login").style.display = "none";
     document.getElementById("register").style.display = "none";
+
+    // запускаем таймер
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    countdownInterval = setInterval(async () => {
+      const now = new Date();
+      const diff = Math.floor((expires - now) / 1000); // разница в секундах
+
+      if (diff <= 0) {
+        clearInterval(countdownInterval);
+        alert("Время аккаунта истекло!");
+        await deleteDoc(docRef);
+        await deleteUser(user);
+        document.getElementById("welcome").style.display = "none";
+        document.getElementById("login").style.display = "block";
+        document.getElementById("register").style.display = "block";
+      } else {
+        document.getElementById("accountTime").textContent =
+          `Осталось: ${diff} секунд (с ${registeredAt.toLocaleTimeString()} до ${expires.toLocaleTimeString()})`;
+      }
+    }, 1000);
 
   } catch (error) {
     alert(error.message);
@@ -84,6 +95,7 @@ window.login = async function() {
 
 // 🔹 Выход
 window.logout = async function() {
+  if (countdownInterval) clearInterval(countdownInterval);
   await signOut(auth);
   document.getElementById("welcome").style.display = "none";
   document.getElementById("login").style.display = "block";
