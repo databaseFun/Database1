@@ -1,24 +1,24 @@
-// 🔥 Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
+import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
 import {
   getFirestore,
   collection,
   addDoc,
+  setDoc,
+  doc,
+  serverTimestamp,
   query,
   orderBy,
-  onSnapshot,
-  serverTimestamp
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// ❗ ВСТАВЬ СВОЙ firebaseConfig
+/* 🔥 ВСТАВЬ СВОЙ CONFIG */
 const firebaseConfig = {
   apiKey: "API_KEY",
   authDomain: "PROJECT_ID.firebaseapp.com",
@@ -28,51 +28,84 @@ const firebaseConfig = {
   appId: "APP_ID"
 };
 
-// Инициализация
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// DOM
-const authDiv = document.getElementById("auth");
-const chatDiv = document.getElementById("chat");
+const authBox = document.getElementById("auth");
+const chatBox = document.getElementById("chat");
 const messagesDiv = document.getElementById("messages");
 
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const messageInput = document.getElementById("messageInput");
+// регистрация
+registerBtn.onclick = async () => {
+  const email = regEmail.value;
+  const password = regPassword.value;
 
-// Регистрация
-document.getElementById("registerBtn").onclick = async () => {
-  try {
-    await createUserWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-  } catch (e) {
-    alert(e.message);
-  }
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+  await setDoc(doc(db, "users", cred.user.uid), {
+    email,
+    createdAt: serverTimestamp()
+  });
 };
 
-// Вход
-document.getElementById("loginBtn").onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-  } catch (e) {
-    alert(e.message);
-  }
+// вход
+loginBtn.onclick = async () => {
+  await signInWithEmailAndPassword(
+    auth,
+    loginEmail.value,
+    loginPassword.value
+  );
 };
 
-// Выход
-document.getElementById("logoutBtn").onclick = async () => {
+// выход
+logoutBtn.onclick = async () => {
   await signOut(auth);
 };
 
-// Отправка сообщения
-document.getElementById("sendBtn").onclick = async () => {
-  if (!
+// отправка сообщений
+sendBtn.onclick = async () => {
+  const text = messageInput.value.trim();
+  if (!text) return;
+
+  await addDoc(collection(db, "messages"), {
+    uid: auth.currentUser.uid,
+    email: auth.currentUser.email,
+    text,
+    createdAt: serverTimestamp()
+  });
+
+  messageInput.value = "";
+};
+
+// отслеживание входа
+onAuthStateChanged(auth, user => {
+  if (user) {
+    authBox.style.display = "none";
+    chatBox.style.display = "block";
+    loadMessages();
+  } else {
+    authBox.style.display = "block";
+    chatBox.style.display = "none";
+  }
+});
+
+// загрузка всех сообщений (включая старые)
+function loadMessages() {
+  const q = query(
+    collection(db, "messages"),
+    orderBy("createdAt")
+  );
+
+  onSnapshot(q, snap => {
+    messagesDiv.innerHTML = "";
+    snap.forEach(d => {
+      const m = d.data();
+      const div = document.createElement("div");
+      div.className = "msg";
+      div.innerHTML = `<span class="email">${m.email}:</span> ${m.text}`;
+      messagesDiv.appendChild(div);
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+}
