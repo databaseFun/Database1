@@ -1,97 +1,54 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Firebase Chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 400px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,.1);
-    }
-
-    h2 {
-      text-align: center;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      background: #1a73e8;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #chat {
-      display: none;
-    }
-
-    #messages {
-      height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-    }
-
-    .msg {
-      margin-bottom: 6px;
-    }
-
-    .email {
-      color: #1a73e8;
-      font-weight: bold;
-    }
-
-    .logout {
-      background: #d93025;
-      margin-top: 10px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Firebase Chat с Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: Arial; background:#f5f7fa; margin:0; padding:0; }
+.container { max-width:400px; margin:40px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,.1); }
+h2 { text-align:center; margin-bottom:15px; }
+input, button { width:100%; padding:10px; margin-top:10px; box-sizing:border-box; }
+button { background:#1a73e8; color:#fff; border:none; border-radius:4px; cursor:pointer; }
+button:hover { background:#1558b0; }
+#chat { display:none; }
+#messages { height:300px; overflow-y:auto; border:1px solid #ddd; padding:10px; margin-bottom:10px; }
+.msg { margin-bottom:8px; display:flex; justify-content:space-between; }
+.nick { font-weight:bold; color:#1a73e8; }
+.admin { color:red; font-weight:bold; }
+.msg-btn { cursor:pointer; margin-left:5px; color:#555; }
+#adminPanel { margin-top:10px; display:none; }
+</style>
 </head>
 <body>
 
 <div class="container" id="auth">
-  <h2>Вход</h2>
-  <input id="loginEmail" type="email" placeholder="Email">
-  <input id="loginPassword" type="password" placeholder="Пароль">
-  <button id="loginBtn">Войти</button>
-
-  <hr>
-
-  <h2>Регистрация</h2>
-  <input id="regEmail" type="email" placeholder="Email">
-  <input id="regPassword" type="password" placeholder="Пароль">
-  <button id="registerBtn">Зарегистрироваться</button>
+<h2>Вход</h2>
+<input id="loginEmail" type="email" placeholder="Email">
+<input id="loginPassword" type="password" placeholder="Пароль">
+<button id="loginBtn">Войти</button>
+<hr>
+<h2>Регистрация</h2>
+<input id="regEmail" type="email" placeholder="Email">
+<input id="regPassword" type="password" placeholder="Пароль">
+<input id="regNick" type="text" placeholder="Nick-name">
+<button id="registerBtn">Зарегистрироваться</button>
 </div>
 
 <div class="container" id="chat">
-  <h2>Чат</h2>
-  <div id="messages"></div>
-  <input id="messageInput" placeholder="Сообщение">
-  <button id="sendBtn">Отправить</button>
-  <button class="logout" id="logoutBtn">Выйти</button>
+<h2>Общий чат</h2>
+<div id="messages"></div>
+<input id="messageInput" placeholder="Сообщение">
+<button id="sendBtn">Отправить</button>
+
+<div id="adminPanel">
+<input type="password" id="adminPassword" placeholder="Пароль админа">
+<button id="adminLoginBtn">Войти как админ</button>
 </div>
 
-<!-- 🔥 ВАЖНО -->
-<script type="module" src="script.js?v=1"></script>
+<button class="logout" id="logoutBtn">Выйти</button>
+</div>
 
+<script type="module" src="script.js"></script>
 </body>
 </html>
