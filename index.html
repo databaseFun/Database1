@@ -13,9 +13,13 @@ button { background:#1a73e8; color:#fff; border:none; border-radius:4px; cursor:
 button:hover { background:#1558b0; }
 #chat { display:none; }
 #messages { height:300px; overflow-y:auto; border:1px solid #ddd; padding:10px; margin-bottom:10px; }
-.msg { margin-bottom:8px; }
+.msg { margin-bottom:8px; display:flex; justify-content:space-between; }
 .email { font-weight:bold; color:#1a73e8; }
-.logout { background:#d93025; margin-top:10px; }
+.admin-badge { color:red; font-weight:bold; margin-left:5px; }
+.msg-btn { cursor:pointer; margin-left:5px; color:#555; }
+.msg-btn:hover { color:#d93025; }
+#adminDiv { margin-top:10px; display:flex; gap:5px; }
+#adminDiv input { flex:1; }
 </style>
 </head>
 <body>
@@ -40,6 +44,12 @@ button:hover { background:#1558b0; }
 <input id="messageInput" placeholder="Сообщение">
 <button id="sendBtn">Отправить</button>
 <button class="logout" id="logoutBtn">Выйти</button>
+
+<!-- Мини-строка для ввода пароля админа -->
+<div id="adminDiv">
+<input type="password" id="adminPassword" placeholder="Введите пароль админа">
+<button id="adminBtn">Стать админом</button>
+</div>
 </div>
 
 <script type="module" src="script.js"></script>
