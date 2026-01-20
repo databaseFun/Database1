@@ -51,6 +51,12 @@ registerBtn.addEventListener("click", async () => {
   try{
     const cred = await createUserWithEmailAndPassword(auth,email,password);
     await setDoc(doc(db,"users",cred.user.uid),{ nick, createdAt: serverTimestamp() });
+
+    // После успешной регистрации сразу показать чат
+    authBox.style.display="none";
+    chatBox.style.display="block";
+    loadMessages();
+
   } catch(e){ alert(e.message); console.error(e); }
 });
 
