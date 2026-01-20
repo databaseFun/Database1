@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Firebase Chat с Admin</title>
+<title>Firebase Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { font-family: Arial; background:#f5f7fa; margin:0; padding:0; }
@@ -13,11 +13,9 @@ button { background:#1a73e8; color:#fff; border:none; border-radius:4px; cursor:
 button:hover { background:#1558b0; }
 #chat { display:none; }
 #messages { height:300px; overflow-y:auto; border:1px solid #ddd; padding:10px; margin-bottom:10px; }
-.msg { margin-bottom:8px; display:flex; justify-content:space-between; }
+.msg { margin-bottom:8px; }
 .nick { font-weight:bold; color:#1a73e8; }
-.admin { color:red; font-weight:bold; }
-.msg-btn { cursor:pointer; margin-left:5px; color:#555; }
-#adminPanel { margin-top:10px; display:none; }
+.logout { background:#d93025; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -27,7 +25,9 @@ button:hover { background:#1558b0; }
 <input id="loginEmail" type="email" placeholder="Email">
 <input id="loginPassword" type="password" placeholder="Пароль">
 <button id="loginBtn">Войти</button>
+
 <hr>
+
 <h2>Регистрация</h2>
 <input id="regEmail" type="email" placeholder="Email">
 <input id="regPassword" type="password" placeholder="Пароль">
@@ -40,12 +40,6 @@ button:hover { background:#1558b0; }
 <div id="messages"></div>
 <input id="messageInput" placeholder="Сообщение">
 <button id="sendBtn">Отправить</button>
-
-<div id="adminPanel">
-<input type="password" id="adminPassword" placeholder="Пароль админа">
-<button id="adminLoginBtn">Войти как админ</button>
-</div>
-
 <button class="logout" id="logoutBtn">Выйти</button>
 </div>
 
