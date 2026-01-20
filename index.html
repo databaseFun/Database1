@@ -1,54 +1,43 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Firebase Chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f7fb;
+      background: #f5f7fa;
       margin: 0;
       padding: 0;
     }
 
     .container {
-      max-width: 420px;
+      max-width: 400px;
       margin: 40px auto;
-      background: #ffffff;
+      background: #fff;
       padding: 20px;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,.1);
     }
 
     h2 {
       text-align: center;
-      color: #333;
     }
 
     input, button {
       width: 100%;
       padding: 10px;
-      margin: 8px 0;
-      font-size: 14px;
-    }
-
-    input {
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      margin-top: 10px;
     }
 
     button {
-      background: #ffca28;
+      background: #1a73e8;
+      color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #f4b400;
     }
 
     #chat {
@@ -56,55 +45,53 @@
     }
 
     #messages {
-      border: 1px solid #ddd;
       height: 300px;
       overflow-y: auto;
+      border: 1px solid #ddd;
       padding: 10px;
-      margin-bottom: 10px;
-      background: #fafafa;
     }
 
     .msg {
       margin-bottom: 6px;
-      font-size: 14px;
     }
 
     .email {
+      color: #1a73e8;
       font-weight: bold;
-      color: #333;
     }
 
     .logout {
-      background: #e53935;
-      color: white;
+      background: #d93025;
       margin-top: 10px;
     }
   </style>
 </head>
-
 <body>
 
 <div class="container" id="auth">
-  <h2>Вход / Регистрация</h2>
-
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Пароль">
-
+  <h2>Вход</h2>
+  <input id="loginEmail" type="email" placeholder="Email">
+  <input id="loginPassword" type="password" placeholder="Пароль">
   <button id="loginBtn">Войти</button>
+
+  <hr>
+
+  <h2>Регистрация</h2>
+  <input id="regEmail" type="email" placeholder="Email">
+  <input id="regPassword" type="password" placeholder="Пароль">
   <button id="registerBtn">Зарегистрироваться</button>
 </div>
 
 <div class="container" id="chat">
-  <h2>Общий чат</h2>
-
+  <h2>Чат</h2>
   <div id="messages"></div>
-
-  <input id="messageInput" placeholder="Сообщение...">
+  <input id="messageInput" placeholder="Сообщение">
   <button id="sendBtn">Отправить</button>
-
-  <button id="logoutBtn" class="logout">Выйти</button>
+  <button class="logout" id="logoutBtn">Выйти</button>
 </div>
 
-<script type="module" src="script.js"></script>
+<!-- 🔥 ВАЖНО -->
+<script type="module" src="script.js?v=1"></script>
+
 </body>
 </html>
