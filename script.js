@@ -7,7 +7,7 @@ import {
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
-  getFirestore, collection, addDoc, setDoc, doc, serverTimestamp, query, orderBy, onSnapshot, getDoc 
+  getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 Вставь свой WEB firebaseConfig
@@ -35,7 +35,6 @@ const loginBtn = document.getElementById("loginBtn");
 
 const regEmail = document.getElementById("regEmail");
 const regPassword = document.getElementById("regPassword");
-const regNick = document.getElementById("regNick");
 const registerBtn = document.getElementById("registerBtn");
 
 const messageInput = document.getElementById("messageInput");
@@ -46,17 +45,13 @@ const logoutBtn = document.getElementById("logoutBtn");
 registerBtn.addEventListener("click", async () => {
   const email = regEmail.value.trim();
   const password = regPassword.value.trim();
-  const nick = regNick.value.trim();
-  if(!email || !password || !nick){ alert("Заполните все поля"); return; }
+  if(!email || !password){ alert("Заполните все поля"); return; }
   try{
-    const cred = await createUserWithEmailAndPassword(auth,email,password);
-    await setDoc(doc(db,"users",cred.user.uid),{ nick, createdAt: serverTimestamp() });
-
-    // После успешной регистрации сразу показать чат
+    await createUserWithEmailAndPassword(auth,email,password);
+    // после регистрации сразу показать чат
     authBox.style.display="none";
     chatBox.style.display="block";
     loadMessages();
-
   } catch(e){ alert(e.message); console.error(e); }
 });
 
@@ -77,7 +72,7 @@ sendBtn.addEventListener("click", async () => {
   const text = messageInput.value.trim();
   if(!text) return;
   await addDoc(collection(db,"messages"),{
-    uid: auth.currentUser.uid,
+    email: auth.currentUser.email,
     text,
     createdAt: serverTimestamp()
   });
@@ -97,22 +92,17 @@ onAuthStateChanged(auth, user => {
 });
 
 // загрузка сообщений
-async function loadMessages(){
+function loadMessages(){
   const q = query(collection(db,"messages"), orderBy("createdAt"));
-  onSnapshot(q, async snap => {
+  onSnapshot(q, snap => {
     messagesDiv.innerHTML="";
-    for(let d of snap.docs){
+    snap.forEach(d => {
       const m = d.data();
-      const id = d.id;
-
-      const userDoc = await getDoc(doc(db,"users",m.uid));
-      const nick = userDoc.exists() ? userDoc.data().nick : "Unknown";
-
       const div = document.createElement("div");
       div.className="msg";
-      div.innerHTML = `<span class="nick">${nick}:</span> ${m.text}`;
+      div.innerHTML = `<span class="email">${m.email}:</span> ${m.text}`;
       messagesDiv.appendChild(div);
-    }
+    });
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   });
 }
