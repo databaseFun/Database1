@@ -10,7 +10,7 @@ import {
   getFirestore, collection, addDoc, setDoc, doc, serverTimestamp, query, orderBy, onSnapshot, getDoc 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 твой WEB config
+// 🔥 Вставь свой WEB firebaseConfig
 const firebaseConfig = {
   apiKey: "AIzaSyAlrl1dwlRDTSkylFz7sSSH74OGAl1sKZM",
   authDomain: "firstsitee-7f870.firebaseapp.com",
@@ -119,14 +119,15 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// загрузка сообщений
-function loadMessages() {
+// загрузка сообщений с корректной обработкой await
+async function loadMessages() {
   const q = query(collection(db,"messages"), orderBy("createdAt"));
-  onSnapshot(q, snap => {
+  onSnapshot(q, async snap => {
     messagesDiv.innerHTML="";
-    snap.forEach(async d => {
+    for (let d of snap.docs) {
       const m = d.data();
       const id = d.id;
+
       const userDoc = await getDoc(doc(db,"users", m.uid));
       const nick = userDoc.exists() ? userDoc.data().nick : "Unknown";
 
@@ -136,11 +137,11 @@ function loadMessages() {
       // текст сообщения + ник
       const nickSpan = document.createElement("span");
       nickSpan.className = "nick";
-      nickSpan.innerText = isAdmin && m.uid===auth.currentUser.uid ? nick+" • Adm •" : nick;
+      nickSpan.innerText = (isAdmin && m.uid===auth.currentUser.uid) ? nick+" • Adm •" : nick;
       if(isAdmin && m.uid===auth.currentUser.uid) nickSpan.classList.add("admin");
 
       const textSpan = document.createElement("span");
-      textSpan.innerText = ": "+m.text;
+      textSpan.innerText = ": " + m.text;
 
       div.appendChild(nickSpan);
       div.appendChild(textSpan);
@@ -155,7 +156,7 @@ function loadMessages() {
       }
 
       messagesDiv.appendChild(div);
-    });
+    }
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   });
 }
