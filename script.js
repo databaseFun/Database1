@@ -7,7 +7,7 @@ import {
   onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
-  getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot 
+  getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 Вставь свой WEB firebaseConfig
@@ -41,6 +41,11 @@ const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
+const adminPasswordInput = document.getElementById("adminPassword");
+const adminBtn = document.getElementById("adminBtn");
+
+let isAdmin = false;
+
 // регистрация
 registerBtn.addEventListener("click", async () => {
   const email = regEmail.value.trim();
@@ -48,7 +53,6 @@ registerBtn.addEventListener("click", async () => {
   if(!email || !password){ alert("Заполните все поля"); return; }
   try{
     await createUserWithEmailAndPassword(auth,email,password);
-    // после регистрации сразу показать чат
     authBox.style.display="none";
     chatBox.style.display="block";
     loadMessages();
@@ -65,7 +69,7 @@ loginBtn.addEventListener("click", async () => {
 });
 
 // выход
-logoutBtn.addEventListener("click", async () => { await signOut(auth); });
+logoutBtn.addEventListener("click", async () => { await signOut(auth); isAdmin=false; });
 
 // отправка сообщений
 sendBtn.addEventListener("click", async () => {
@@ -79,6 +83,16 @@ sendBtn.addEventListener("click", async () => {
   messageInput.value="";
 });
 
+// admin login
+adminBtn.addEventListener("click", () => {
+  const pass = adminPasswordInput.value.trim();
+  if(pass==="999111"){ 
+    isAdmin=true; 
+    alert("Вы стали админом");
+    loadMessages();
+  } else alert("Неверный пароль");
+});
+
 // слежение за авторизацией
 onAuthStateChanged(auth, user => {
   if(user){
@@ -88,6 +102,7 @@ onAuthStateChanged(auth, user => {
   } else {
     authBox.style.display="block";
     chatBox.style.display="none";
+    isAdmin=false;
   }
 });
 
@@ -100,7 +115,34 @@ function loadMessages(){
       const m = d.data();
       const div = document.createElement("div");
       div.className="msg";
-      div.innerHTML = `<span class="email">${m.email}:</span> ${m.text}`;
+
+      const emailSpan = document.createElement("span");
+      emailSpan.className="email";
+      emailSpan.innerText = m.email;
+      if(isAdmin && m.email===auth.currentUser.email) {
+        const badge = document.createElement("span");
+        badge.className="admin-badge";
+        badge.innerText=" A";
+        emailSpan.appendChild(badge);
+      }
+
+      const textSpan = document.createElement("span");
+      textSpan.innerText = ": " + m.text;
+
+      div.appendChild(emailSpan);
+      div.appendChild(textSpan);
+
+      // кнопка удаления для админа
+      if(isAdmin && m.email!==auth.currentUser.email){
+        const delBtn = document.createElement("span");
+        delBtn.className="msg-btn";
+        delBtn.innerText="🗑";
+        delBtn.onclick = async () => {
+          if(confirm("Удалить это сообщение?")) await deleteDoc(doc(db,"messages",d.id));
+        }
+        div.appendChild(delBtn);
+      }
+
       messagesDiv.appendChild(div);
     });
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
