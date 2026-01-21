@@ -2,56 +2,75 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Firebase Chat</title>
+<title>Электронный дневник</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body { font-family: Arial; background:#f5f7fa; margin:0; padding:0; }
-.container { max-width:400px; margin:40px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,.1); }
-h2 { text-align:center; margin-bottom:15px; }
-input, button { width:100%; padding:10px; margin-top:10px; box-sizing:border-box; font-size:14px; }
-button { background:#1a73e8; color:#fff; border:none; border-radius:4px; cursor:pointer; }
-button:hover { background:#1558b0; }
-#chat { display:none; }
-#messages { height:300px; overflow-y:auto; border:1px solid #ddd; padding:10px; margin-bottom:10px; }
-.msg { margin-bottom:8px; display:flex; align-items:center; gap:5px; }
-.email { font-weight:bold; color:#1a73e8; }
-.admin-badge { color:red; font-weight:bold; margin-left:5px; }
-.msg-btn { cursor:pointer; color:#555; }
-.msg-btn:hover { color:#d93025; }
-#adminDiv { margin-top:10px; display:flex; gap:5px; flex-direction:column; }
-#adminDiv input { width:100%; padding:12px; font-size:16px; box-sizing:border-box; }
-#adminDiv button { width:100%; padding:12px; font-size:16px; }
-.logout { background:#d93025; margin-top:10px; }
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f4f8;
+}
+.container {
+  max-width: 420px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+h2 {
+  text-align: center;
+}
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+}
+button {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+.subject {
+  margin-top: 10px;
+  padding: 8px;
+  background: #eef2ff;
+  border-radius: 4px;
+}
+.grade {
+  font-weight: bold;
+  float: right;
+}
+.teacher input {
+  width: 60px;
+}
+.logout {
+  background: #d93025;
+  margin-top: 15px;
+}
 </style>
 </head>
 <body>
 
 <div class="container" id="auth">
-<h2>Вход</h2>
-<input id="loginEmail" type="email" placeholder="Email">
-<input id="loginPassword" type="password" placeholder="Пароль">
-<button id="loginBtn">Войти</button>
+  <h2>Вход</h2>
+  <input id="loginEmail" type="email" placeholder="Email">
+  <input id="loginPassword" type="password" placeholder="Пароль">
+  <input id="teacherCode" type="text" placeholder="Вы учитель? Введите код (необязательно)">
+  <button id="loginBtn">Войти</button>
 
-<hr>
+  <hr>
 
-<h2>Регистрация</h2>
-<input id="regEmail" type="email" placeholder="Email">
-<input id="regPassword" type="password" placeholder="Пароль">
-<button id="registerBtn">Зарегистрироваться</button>
+  <h2>Регистрация</h2>
+  <input id="regEmail" type="email" placeholder="Email">
+  <input id="regPassword" type="password" placeholder="Пароль">
+  <button id="registerBtn">Зарегистрироваться</button>
 </div>
 
-<div class="container" id="chat">
-<h2>Общий чат</h2>
-<div id="messages"></div>
-<input id="messageInput" placeholder="Сообщение">
-<button id="sendBtn">Отправить</button>
-<button class="logout" id="logoutBtn">Выйти</button>
-
-<!-- Мини-строка для ввода пароля админа -->
-<div id="adminDiv">
-<input type="password" id="adminPassword" placeholder="Введите пароль админа">
-<button id="adminBtn">Стать админом</button>
-</div>
+<div class="container" id="diary" style="display:none">
+  <h2>Электронный дневник</h2>
+  <div id="subjects"></div>
+  <button class="logout" id="logoutBtn">Выйти</button>
 </div>
 
 <script type="module" src="script.js"></script>
