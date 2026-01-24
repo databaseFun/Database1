@@ -1,10 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔹 ВАЖНО: для веба нужен Web API Key, Android API Key может не работать
+// 🔹 Здесь твой API Key
 const firebaseConfig = {
-  apiKey: "AIzaSyBJfdjhZzzRvncchcEH_4YrkrxIjeyChLQ", // здесь вставь Web API Key из Firebase Console
+  apiKey: "AIzaSyBJfdjhZzzRvncchcEH_4YrkrxIjeyChLQ",
   authDomain: "siteee-4d4dc.firebaseapp.com",
   projectId: "siteee-4d4dc",
   storageBucket: "siteee-4d4dc.appspot.com",
@@ -59,7 +59,7 @@ function handleAuthError(e){
 // Регистрация
 registerBtn.onclick = async () => {
   try{
-    const userCredential = await createUserWithEmailAndPassword(auth, regEmail.value, regPassword.value);
+    await createUserWithEmailAndPassword(auth, regEmail.value, regPassword.value);
     alert("Регистрация успешна!");
   } catch(e){ handleAuthError(e); }
 };
@@ -71,7 +71,7 @@ loginBtn.onclick = async () => {
 };
 
 // После входа
-onAuthStateChanged(auth, async user => {
+onAuthStateChanged(auth, user => {
   if(user){
     loginBox.classList.add("hidden");
     registerBox.classList.add("hidden");
@@ -85,31 +85,39 @@ beAdminBtn.onclick = () => {
   adminBox.classList.add("hidden");
   questionBox.classList.add("hidden");
   answersBox.classList.remove("hidden");
-  displayAllAnswers();
+  watchAnswersRealtime();
 };
 notAdminBtn.onclick = () => {
   adminBox.classList.add("hidden");
   questionBox.classList.remove("hidden");
 };
 
-// Пользователь отправляет ответ
+// Отправка ответа
 submitAnswerBtn.onclick = async () => {
   const radios = document.getElementsByName("answer");
   let selected = null;
-  radios.forEach(r=>{if(r.checked) selected=r.value;});
+  radios.forEach(r => { if(r.checked) selected = r.value; });
   if(!selected){ alert("Выберите вариант"); return; }
-  await setDoc(doc(db,"answers",window.currentUser),{answer:selected});
+
+  await addDoc(collection(db, "answers"), { 
+    uid: window.currentUser, 
+    answer: selected, 
+    timestamp: Date.now() 
+  });
+
   alert("Ответ отправлен!");
   questionBox.classList.add("hidden");
 };
 
-// Админ видит все ответы
-async function displayAllAnswers(){
-  answersList.innerHTML="";
-  const querySnapshot = await getDocs(collection(db,"answers"));
-  querySnapshot.forEach(docSnap=>{
-    const div = document.createElement("div");
-    div.textContent = docSnap.id+": "+docSnap.data().answer;
-    answersList.appendChild(div);
+// Отслеживание всех ответов в реальном времени для админа
+function watchAnswersRealtime(){
+  const q = collection(db, "answers");
+  onSnapshot(q, snapshot => {
+    answersList.innerHTML = "";
+    snapshot.forEach(docSnap => {
+      const div = document.createElement("div");
+      div.textContent = docSnap.data().uid + ": " + docSnap.data().answer;
+      answersList.appendChild(div);
+    });
   });
 }
