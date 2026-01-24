@@ -13,12 +13,12 @@ import {
   collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 Твой API Key
+// 🔥 Твой API Key из JSON
 const firebaseConfig = {
   apiKey: "AIzaSyAlrl1dwlRDTSkylFz7sSSH74OGAl1sKZM",
   authDomain: "firstsitee-7f870.firebaseapp.com",
   projectId: "firstsitee-7f870",
-  storageBucket: "firstsitee-7f870.appspot.com",
+  storageBucket: "firstsitee-7f870.firebasestorage.app",
   messagingSenderId: "586575021031",
   appId: "1:586575021031:android:6f2cb0bf62771dc148f342"
 };
@@ -111,7 +111,6 @@ beAdminBtn.onclick = () => {
   questionBox.classList.add("hidden");
   answersBox.classList.remove("hidden");
 
-  // Показываем ответы всех пользователей
   displayAllAnswers();
 };
 
@@ -128,7 +127,6 @@ submitAnswerBtn.onclick = async () => {
   radios.forEach(r => { if(r.checked) selected = r.value; });
   if(!selected) { alert("Выберите вариант"); return; }
 
-  // Сохраняем в Firestore
   await setDoc(doc(db, "answers", window.currentUser), { answer: selected });
   alert("Ответ отправлен!");
   questionBox.classList.add("hidden");
