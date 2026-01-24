@@ -13,14 +13,15 @@ import {
   collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 Твой API Key из JSON
+// 🔹 Новый Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyAlrl1dwlRDTSkylFz7sSSH74OGAl1sKZM",
-  authDomain: "firstsitee-7f870.firebaseapp.com",
-  projectId: "firstsitee-7f870",
-  storageBucket: "firstsitee-7f870.firebasestorage.app",
-  messagingSenderId: "586575021031",
-  appId: "1:586575021031:android:6f2cb0bf62771dc148f342"
+  apiKey: "AIzaSyDDIFLV21ARvMBu5tM-eJ6Gyi3EZmY0uFw",
+  authDomain: "siteee-4d4dc.firebaseapp.com",
+  projectId: "siteee-4d4dc",
+  storageBucket: "siteee-4d4dc.firebasestorage.app",
+  messagingSenderId: "661226324438",
+  appId: "1:661226324438:web:fb55ac46dd3b6a5e112477",
+  measurementId: "G-T5MNFEZT45"
 };
 
 const app = initializeApp(firebaseConfig);
