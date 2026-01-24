@@ -2,13 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Вход</title>
+<title>Вход / Дневник</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -17,26 +15,26 @@ body {
   color: #fff;
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
 }
 
 .container {
   width: 100%;
   max-width: 360px;
-  padding: 24px;
+  padding: 20px;
 }
 
 h1 {
-  font-size: 22px;
-  font-weight: 500;
-  margin-bottom: 20px;
   text-align: center;
+  font-size: 22px;
+  margin-bottom: 20px;
 }
 
 input {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   margin-bottom: 12px;
   background: #111;
   border: 1px solid #333;
@@ -45,40 +43,35 @@ input {
   font-size: 15px;
 }
 
-input:focus {
-  outline: none;
-  border-color: #5f9cff;
-}
+input:focus { outline: none; border-color: #5f9cff; }
 
 button {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border-radius: 8px;
   border: none;
   font-size: 15px;
   cursor: pointer;
+  margin-top: 8px;
 }
 
-.login-btn {
-  background: #5f9cff;
-  color: #000;
-  font-weight: 500;
-  box-shadow: 0 0 10px rgba(95,156,255,.6);
+.login-btn { background: #5f9cff; color: #000; font-weight: 500; }
+.register-btn { background: transparent; color: #5f9cff; margin-top: 10px; }
+.register-btn:hover { text-decoration: underline; }
+
+.hidden { display: none; }
+
+#questionBox, #adminBox, #answersBox {
+  margin-top: 20px;
+  background: #111;
+  padding: 12px;
+  border-radius: 8px;
 }
 
-.register-btn {
-  background: transparent;
-  color: #5f9cff;
-  margin-top: 10px;
-}
+label { display: block; margin-bottom: 8px; cursor: pointer; }
+input[type="radio"] { margin-right: 8px; }
 
-.register-btn:hover {
-  text-decoration: underline;
-}
-
-.hidden {
-  display: none;
-}
+#answersList div { padding: 6px 0; border-bottom: 1px solid #333; }
 </style>
 </head>
 <body>
@@ -88,10 +81,8 @@ button {
   <!-- ВХОД -->
   <div id="loginBox">
     <h1>Вход в аккаунт</h1>
-
     <input id="loginEmail" type="email" placeholder="Email">
     <input id="loginPassword" type="password" placeholder="Пароль">
-
     <button class="login-btn" id="loginBtn">Войти</button>
     <button class="register-btn" id="showRegister">Register</button>
   </div>
@@ -99,12 +90,32 @@ button {
   <!-- РЕГИСТРАЦИЯ -->
   <div id="registerBox" class="hidden">
     <h1>Регистрация</h1>
-
     <input id="regEmail" type="email" placeholder="Email">
     <input id="regPassword" type="password" placeholder="Пароль">
-
     <button class="login-btn" id="registerBtn">Создать аккаунт</button>
     <button class="register-btn" id="showLogin">Назад ко входу</button>
+  </div>
+
+  <!-- Вопрос пользователю -->
+  <div id="questionBox" class="hidden">
+    <h1>ce curat?</h1>
+    <label><input type="radio" name="answer" value="Ideal">Ideal</label>
+    <label><input type="radio" name="answer" value="Norm">Norm</label>
+    <label><input type="radio" name="answer" value="Repede">Repede</label>
+    <button id="submitAnswer">Отправить</button>
+  </div>
+
+  <!-- Админ -->
+  <div id="adminBox" class="hidden">
+    <h1>Вы админ?</h1>
+    <button id="beAdmin">Да</button>
+    <button id="notAdmin">Нет</button>
+  </div>
+
+  <!-- Список ответов -->
+  <div id="answersBox" class="hidden">
+    <h1>Ответы пользователей</h1>
+    <div id="answersList"></div>
   </div>
 
 </div>
