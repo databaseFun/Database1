@@ -9,19 +9,18 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
-  collection,
-  getDocs
+  getDocs,
+  collection
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Firebase config
+// 🔥 Твой API Key
 const firebaseConfig = {
   apiKey: "AIzaSyAlrl1dwlRDTSkylFz7sSSH74OGAl1sKZM",
   authDomain: "firstsitee-7f870.firebaseapp.com",
   projectId: "firstsitee-7f870",
   storageBucket: "firstsitee-7f870.appspot.com",
   messagingSenderId: "586575021031",
-  appId: "1:586575021031:web:XXXXXXX"
+  appId: "1:586575021031:android:6f2cb0bf62771dc148f342"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -51,6 +50,7 @@ const submitAnswerBtn = document.getElementById("submitAnswer");
 const beAdminBtn = document.getElementById("beAdmin");
 const notAdminBtn = document.getElementById("notAdmin");
 
+// Переключение форм
 showRegisterBtn.onclick = () => {
   loginBox.classList.add("hidden");
   registerBox.classList.remove("hidden");
@@ -60,7 +60,7 @@ showLoginBtn.onclick = () => {
   loginBox.classList.remove("hidden");
 };
 
-// Функция для ошибок
+// Обработка ошибок
 function handleAuthError(e) {
   switch(e.code){
     case "auth/invalid-email": alert("Введите почту правильно! (name@gmail.com)"); break;
@@ -97,7 +97,7 @@ onAuthStateChanged(auth, async user => {
     loginBox.classList.add("hidden");
     registerBox.classList.add("hidden");
 
-    // Сначала спрашиваем: вы админ?
+    // Показываем админ-бокс
     adminBox.classList.remove("hidden");
 
     // Сохраняем UID
@@ -105,23 +105,23 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-// Пользователь хочет стать админом
+// Админ выбирает "Да"
 beAdminBtn.onclick = () => {
   adminBox.classList.add("hidden");
-  answersBox.classList.remove("hidden");
   questionBox.classList.add("hidden");
+  answersBox.classList.remove("hidden");
 
   // Показываем ответы всех пользователей
   displayAllAnswers();
 };
 
-// Пользователь не админ
+// Админ выбирает "Нет"
 notAdminBtn.onclick = () => {
   adminBox.classList.add("hidden");
   questionBox.classList.remove("hidden");
 };
 
-// Отправка ответа
+// Пользователь отправляет ответ
 submitAnswerBtn.onclick = async () => {
   const radios = document.getElementsByName("answer");
   let selected = null;
@@ -134,7 +134,7 @@ submitAnswerBtn.onclick = async () => {
   questionBox.classList.add("hidden");
 };
 
-// Функция для админа: показать все ответы
+// Админ видит все ответы
 async function displayAllAnswers(){
   answersList.innerHTML = "";
   const querySnapshot = await getDocs(collection(db, "answers"));
