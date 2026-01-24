@@ -5,10 +5,18 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 ВСТАВЬ СВОЙ apiKey
+// Firebase config
 const firebaseConfig = {
-  apiKey: "ВСТАВЬ_API_KEY",
+  apiKey: "AIzaSyAlrl1dwlRDTSkylFz7sSSH74OGAl1sKZM",
   authDomain: "firstsitee-7f870.firebaseapp.com",
   projectId: "firstsitee-7f870",
   storageBucket: "firstsitee-7f870.appspot.com",
@@ -18,10 +26,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// элементы
+// Элементы
 const loginBox = document.getElementById("loginBox");
 const registerBox = document.getElementById("registerBox");
+const questionBox = document.getElementById("questionBox");
+const adminBox = document.getElementById("adminBox");
+const answersBox = document.getElementById("answersBox");
+const answersList = document.getElementById("answersList");
 
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
@@ -31,37 +44,103 @@ const regEmail = document.getElementById("regEmail");
 const regPassword = document.getElementById("regPassword");
 const registerBtn = document.getElementById("registerBtn");
 
-document.getElementById("showRegister").onclick = () => {
+const showRegisterBtn = document.getElementById("showRegister");
+const showLoginBtn = document.getElementById("showLogin");
+
+const submitAnswerBtn = document.getElementById("submitAnswer");
+const beAdminBtn = document.getElementById("beAdmin");
+const notAdminBtn = document.getElementById("notAdmin");
+
+showRegisterBtn.onclick = () => {
   loginBox.classList.add("hidden");
   registerBox.classList.remove("hidden");
 };
-
-document.getElementById("showLogin").onclick = () => {
+showLoginBtn.onclick = () => {
   registerBox.classList.add("hidden");
   loginBox.classList.remove("hidden");
 };
 
-// вход
-loginBtn.onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
-  } catch (e) {
-    alert(e.message);
+// Функция для ошибок
+function handleAuthError(e) {
+  switch(e.code){
+    case "auth/invalid-email": alert("Введите почту правильно! (name@gmail.com)"); break;
+    case "auth/user-not-found": alert("Пользователь не найден."); break;
+    case "auth/wrong-password": alert("Неверный пароль."); break;
+    case "auth/email-already-in-use": alert("Эта почта уже зарегистрирована."); break;
+    case "auth/weak-password": alert("Пароль слишком простой."); break;
+    default: alert(e.message); break;
   }
-};
+}
 
-// регистрация
+// Регистрация
 registerBtn.onclick = async () => {
   try {
     await createUserWithEmailAndPassword(auth, regEmail.value, regPassword.value);
-  } catch (e) {
-    alert(e.message);
+    alert("Регистрация успешна!");
+  } catch(e) {
+    handleAuthError(e);
   }
 };
 
-// авто-вход
-onAuthStateChanged(auth, user => {
-  if (user) {
-    alert("Вошёл: " + user.email);
+// Вход
+loginBtn.onclick = async () => {
+  try {
+    await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
+  } catch(e) {
+    handleAuthError(e);
+  }
+};
+
+// После входа
+onAuthStateChanged(auth, async user => {
+  if(user){
+    loginBox.classList.add("hidden");
+    registerBox.classList.add("hidden");
+
+    // Сначала спрашиваем: вы админ?
+    adminBox.classList.remove("hidden");
+
+    // Сохраняем UID
+    window.currentUser = user.uid;
   }
 });
+
+// Пользователь хочет стать админом
+beAdminBtn.onclick = () => {
+  adminBox.classList.add("hidden");
+  answersBox.classList.remove("hidden");
+  questionBox.classList.add("hidden");
+
+  // Показываем ответы всех пользователей
+  displayAllAnswers();
+};
+
+// Пользователь не админ
+notAdminBtn.onclick = () => {
+  adminBox.classList.add("hidden");
+  questionBox.classList.remove("hidden");
+};
+
+// Отправка ответа
+submitAnswerBtn.onclick = async () => {
+  const radios = document.getElementsByName("answer");
+  let selected = null;
+  radios.forEach(r => { if(r.checked) selected = r.value; });
+  if(!selected) { alert("Выберите вариант"); return; }
+
+  // Сохраняем в Firestore
+  await setDoc(doc(db, "answers", window.currentUser), { answer: selected });
+  alert("Ответ отправлен!");
+  questionBox.classList.add("hidden");
+};
+
+// Функция для админа: показать все ответы
+async function displayAllAnswers(){
+  answersList.innerHTML = "";
+  const querySnapshot = await getDocs(collection(db, "answers"));
+  querySnapshot.forEach(docSnap => {
+    const div = document.createElement("div");
+    div.textContent = docSnap.id + ": " + docSnap.data().answer;
+    answersList.appendChild(div);
+  });
+}
