@@ -1,24 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDocs,
-  collection
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔹 Новый Firebase Config
+// 🔹 ВАЖНО: для веба нужен Web API Key, Android API Key может не работать
 const firebaseConfig = {
-  apiKey: "AIzaSyDDIFLV21ARvMBu5tM-eJ6Gyi3EZmY0uFw",
+  apiKey: "AIzaSyBJfdjhZzzRvncchcEH_4YrkrxIjeyChLQ", // здесь вставь Web API Key из Firebase Console
   authDomain: "siteee-4d4dc.firebaseapp.com",
   projectId: "siteee-4d4dc",
-  storageBucket: "siteee-4d4dc.firebasestorage.app",
+  storageBucket: "siteee-4d4dc.appspot.com",
   messagingSenderId: "661226324438",
   appId: "1:661226324438:web:fb55ac46dd3b6a5e112477",
   measurementId: "G-T5MNFEZT45"
@@ -52,44 +41,33 @@ const beAdminBtn = document.getElementById("beAdmin");
 const notAdminBtn = document.getElementById("notAdmin");
 
 // Переключение форм
-showRegisterBtn.onclick = () => {
-  loginBox.classList.add("hidden");
-  registerBox.classList.remove("hidden");
-};
-showLoginBtn.onclick = () => {
-  registerBox.classList.add("hidden");
-  loginBox.classList.remove("hidden");
-};
+showRegisterBtn.onclick = () => { loginBox.classList.add("hidden"); registerBox.classList.remove("hidden"); };
+showLoginBtn.onclick = () => { registerBox.classList.add("hidden"); loginBox.classList.remove("hidden"); };
 
-// Обработка ошибок
-function handleAuthError(e) {
+// Ошибки
+function handleAuthError(e){
   switch(e.code){
     case "auth/invalid-email": alert("Введите почту правильно! (name@gmail.com)"); break;
-    case "auth/user-not-found": alert("Пользователь не найден."); break;
-    case "auth/wrong-password": alert("Неверный пароль."); break;
-    case "auth/email-already-in-use": alert("Эта почта уже зарегистрирована."); break;
-    case "auth/weak-password": alert("Пароль слишком простой."); break;
+    case "auth/user-not-found": alert("Пользователь не найден"); break;
+    case "auth/wrong-password": alert("Неверный пароль"); break;
+    case "auth/email-already-in-use": alert("Эта почта уже зарегистрирована"); break;
+    case "auth/weak-password": alert("Пароль слишком простой"); break;
     default: alert(e.message); break;
   }
 }
 
 // Регистрация
 registerBtn.onclick = async () => {
-  try {
-    await createUserWithEmailAndPassword(auth, regEmail.value, regPassword.value);
+  try{
+    const userCredential = await createUserWithEmailAndPassword(auth, regEmail.value, regPassword.value);
     alert("Регистрация успешна!");
-  } catch(e) {
-    handleAuthError(e);
-  }
+  } catch(e){ handleAuthError(e); }
 };
 
 // Вход
 loginBtn.onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value);
-  } catch(e) {
-    handleAuthError(e);
-  }
+  try{ await signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value); } 
+  catch(e){ handleAuthError(e); }
 };
 
 // После входа
@@ -97,25 +75,18 @@ onAuthStateChanged(auth, async user => {
   if(user){
     loginBox.classList.add("hidden");
     registerBox.classList.add("hidden");
-
-    // Показываем админ-бокс
     adminBox.classList.remove("hidden");
-
-    // Сохраняем UID
     window.currentUser = user.uid;
   }
 });
 
-// Админ выбирает "Да"
+// Админ
 beAdminBtn.onclick = () => {
   adminBox.classList.add("hidden");
   questionBox.classList.add("hidden");
   answersBox.classList.remove("hidden");
-
   displayAllAnswers();
 };
-
-// Админ выбирает "Нет"
 notAdminBtn.onclick = () => {
   adminBox.classList.add("hidden");
   questionBox.classList.remove("hidden");
@@ -125,21 +96,20 @@ notAdminBtn.onclick = () => {
 submitAnswerBtn.onclick = async () => {
   const radios = document.getElementsByName("answer");
   let selected = null;
-  radios.forEach(r => { if(r.checked) selected = r.value; });
-  if(!selected) { alert("Выберите вариант"); return; }
-
-  await setDoc(doc(db, "answers", window.currentUser), { answer: selected });
+  radios.forEach(r=>{if(r.checked) selected=r.value;});
+  if(!selected){ alert("Выберите вариант"); return; }
+  await setDoc(doc(db,"answers",window.currentUser),{answer:selected});
   alert("Ответ отправлен!");
   questionBox.classList.add("hidden");
 };
 
 // Админ видит все ответы
 async function displayAllAnswers(){
-  answersList.innerHTML = "";
-  const querySnapshot = await getDocs(collection(db, "answers"));
-  querySnapshot.forEach(docSnap => {
+  answersList.innerHTML="";
+  const querySnapshot = await getDocs(collection(db,"answers"));
+  querySnapshot.forEach(docSnap=>{
     const div = document.createElement("div");
-    div.textContent = docSnap.id + ": " + docSnap.data().answer;
+    div.textContent = docSnap.id+": "+docSnap.data().answer;
     answersList.appendChild(div);
   });
 }
