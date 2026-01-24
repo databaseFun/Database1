@@ -2,75 +2,103 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Электронный дневник</title>
+<title>Вход — Электронный дневник</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Неоновая типография -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 body {
-  font-family: Arial, sans-serif;
-  background: #f2f4f8;
+  margin: 0;
+  padding: 0;
+  background: #08080f;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
+
 .container {
-  max-width: 420px;
-  margin: 30px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-}
-h2 {
+  width: 350px;
+  background: rgba(0,0,0,0.75);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 0 20px #0ff, 0 0 40px #08f;
   text-align: center;
 }
-input, button {
+
+h2 {
+  font-size: 24px;
+  color: #0ff;
+  text-shadow: 0 0 8px #1ee, 0 0 16px #0ff;
+  margin-bottom: 20px;
+}
+
+input {
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-}
-button {
-  background: #1a73e8;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-}
-.subject {
+  padding: 12px;
   margin-top: 10px;
-  padding: 8px;
-  background: #eef2ff;
-  border-radius: 4px;
+  background: #111;
+  border: 2px solid #0ff;
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: inset 0 0 8px #0ff;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
 }
-.grade {
+
+input:focus {
+  border-color: #1ff;
+  box-shadow: 0 0 8px #1ff, inset 0 0 10px #1ff;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 16px;
+  background: #0ff;
+  color: #000;
   font-weight: bold;
-  float: right;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  text-shadow: 0 0 6px #1ff;
+  box-shadow: 0 0 10px #0ff, 0 0 20px #08f;
+  transition: 0.2s;
 }
-.teacher input {
-  width: 60px;
+
+button:hover {
+  background: #1ff;
+  box-shadow: 0 0 14px #1ff, 0 0 28px #0af;
 }
-.logout {
-  background: #d93025;
-  margin-top: 15px;
+
+hr {
+  border-color: #333;
+  margin: 20px 0;
 }
 </style>
 </head>
 <body>
 
 <div class="container" id="auth">
-  <h2>Вход</h2>
+  <h2>Войти или Зарегистрироваться</h2>
+
+  <!-- Вход -->
   <input id="loginEmail" type="email" placeholder="Email">
   <input id="loginPassword" type="password" placeholder="Пароль">
-  <input id="teacherCode" type="text" placeholder="Вы учитель? Введите код (необязательно)">
   <button id="loginBtn">Войти</button>
 
   <hr>
 
-  <h2>Регистрация</h2>
-  <input id="regEmail" type="email" placeholder="Email">
+  <!-- Регистрация -->
+  <input id="regEmail" type="email" placeholder="Email для регистрации">
   <input id="regPassword" type="password" placeholder="Пароль">
   <button id="registerBtn">Зарегистрироваться</button>
-</div>
-
-<div class="container" id="diary" style="display:none">
-  <h2>Электронный дневник</h2>
-  <div id="subjects"></div>
-  <button class="logout" id="logoutBtn">Выйти</button>
 </div>
 
 <script type="module" src="script.js"></script>
