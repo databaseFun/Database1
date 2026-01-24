@@ -1,125 +1,58 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ro">
 <head>
 <meta charset="UTF-8">
-<title>Вход / Дневник</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>DatabaseFun Chat / Curat</title>
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: #0b0b0f;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 40px;
-}
-
-.container {
-  width: 100%;
-  max-width: 360px;
-  padding: 20px;
-}
-
-h1 {
-  text-align: center;
-  font-size: 22px;
-  margin-bottom: 20px;
-}
-
-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 15px;
-}
-
-input:focus { outline: none; border-color: #5f9cff; }
-
-button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-.login-btn { background: #5f9cff; color: #000; font-weight: 500; }
-.register-btn { background: transparent; color: #5f9cff; margin-top: 10px; }
-.register-btn:hover { text-decoration: underline; }
-
-.hidden { display: none; }
-
-#questionBox, #adminBox, #answersBox {
-  margin-top: 20px;
-  background: #111;
-  padding: 12px;
-  border-radius: 8px;
-}
-
-label { display: block; margin-bottom: 8px; cursor: pointer; }
-input[type="radio"] { margin-right: 8px; }
-
-#answersList div { padding: 6px 0; border-bottom: 1px solid #333; }
+  body {margin:0;padding:0;font-family:Arial,sans-serif;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+  .hidden {display:none;}
+  input, button {padding:10px;margin:5px;border-radius:5px;border:none;}
+  button {cursor:pointer;background:#2196f3;color:#fff;font-weight:bold;}
+  input {width:80%;}
+  .question-box, .admin-box {margin-top:20px;}
+  .answers-box {margin-top:20px;max-height:200px;overflow-y:auto;width:80%;}
+  .answers-box div {padding:5px;border-bottom:1px solid #555;}
 </style>
 </head>
 <body>
 
-<div class="container">
+<div id="loginBox">
+  <h2>Вход в аккаунт</h2>
+  <input type="email" id="loginEmail" placeholder="Email"><br>
+  <input type="password" id="loginPassword" placeholder="Пароль"><br>
+  <button id="loginBtn">Войти</button><br>
+  <button id="showRegister">Register</button>
+</div>
 
-  <!-- ВХОД -->
-  <div id="loginBox">
-    <h1>Вход в аккаунт</h1>
-    <input id="loginEmail" type="email" placeholder="Email">
-    <input id="loginPassword" type="password" placeholder="Пароль">
-    <button class="login-btn" id="loginBtn">Войти</button>
-    <button class="register-btn" id="showRegister">Register</button>
-  </div>
+<div id="registerBox" class="hidden">
+  <h2>Регистрация</h2>
+  <input type="email" id="regEmail" placeholder="Email"><br>
+  <input type="password" id="regPassword" placeholder="Пароль"><br>
+  <button id="registerBtn">Зарегистрироваться</button><br>
+  <button id="showLogin">Login</button>
+</div>
 
-  <!-- РЕГИСТРАЦИЯ -->
-  <div id="registerBox" class="hidden">
-    <h1>Регистрация</h1>
-    <input id="regEmail" type="email" placeholder="Email">
-    <input id="regPassword" type="password" placeholder="Пароль">
-    <button class="login-btn" id="registerBtn">Создать аккаунт</button>
-    <button class="register-btn" id="showLogin">Назад ко входу</button>
-  </div>
+<div id="adminBox" class="hidden">
+  <h3>Вы админ?</h3>
+  <button id="beAdmin">Да</button>
+  <button id="notAdmin">Нет</button>
+</div>
 
-  <!-- Вопрос пользователю -->
-  <div id="questionBox" class="hidden">
-    <h1>ce curat?</h1>
-    <label><input type="radio" name="answer" value="Ideal">Ideal</label>
-    <label><input type="radio" name="answer" value="Norm">Norm</label>
-    <label><input type="radio" name="answer" value="Repede">Repede</label>
-    <button id="submitAnswer">Отправить</button>
-  </div>
+<div id="questionBox" class="hidden question-box">
+  <h3>Ce curat?</h3>
+  <label><input type="radio" name="answer" value="Ideal"> Ideal</label><br>
+  <label><input type="radio" name="answer" value="Norm"> Norm</label><br>
+  <label><input type="radio" name="answer" value="Repede"> Repede</label><br>
+  <button id="submitAnswer">Отправить</button>
+</div>
 
-  <!-- Админ -->
-  <div id="adminBox" class="hidden">
-    <h1>Вы админ?</h1>
-    <button id="beAdmin">Да</button>
-    <button id="notAdmin">Нет</button>
-  </div>
-
-  <!-- Список ответов -->
-  <div id="answersBox" class="hidden">
-    <h1>Ответы пользователей</h1>
-    <div id="answersList"></div>
-  </div>
-
+<div id="answersBox" class="hidden answers-box">
+  <h3>Все ответы пользователей:</h3>
+  <div id="answersList"></div>
 </div>
 
 <script type="module" src="script.js"></script>
+
 </body>
-</html>
+</html>  
